@@ -1,0 +1,304 @@
+#SingleInstance force
+
+; There is a 1s delay after ANY CLICK operations,
+; but NO after any tasks and DRAG opers.
+
+FoundPic( pic_name )
+{
+	Loop, 5
+	{
+		ImageSearch, FoundX, FoundY, 0, 0, %A_ScreenWidth%, %A_ScreenHeight%, *20 %pic_name%
+		if ( FoundX != "" )
+			return true
+		Sleep, 20
+	}
+	return false
+}
+
+CountPic( pic_array )
+{
+	pic_count := 0
+	For i, x in pic_array
+	{
+		if ( FoundPic( x ) )
+			pic_count++
+	}
+	return pic_count / pic_array.length( )
+}
+
+ClickPic( name, maxcnt = 10 )
+{
+	timecount := 0
+	ErrorLevel := 0
+	FoundX := ""
+	while ( FoundX = "" && timecount <= maxcnt )
+	{
+		ImageSearch, FoundX, FoundY, 0, 0, %A_ScreenWidth%, %A_ScreenHeight%, *30 %name%
+		timecount := timecount + 1
+		Sleep, 100
+	}
+	if ( timecount > maxcnt ){
+		ErrorLevel = 1
+		return
+	}
+	FoundX := FoundX + 5
+	FoundY := FoundY + 5
+	Click, %FoundX%, %FoundY%
+	Sleep, 1000
+}
+
+
+SClick( posX, posY, delay = 1000 )
+{
+	Click, %posX%, %posY%
+	Sleep, %delay%
+}
+
+Purchase_task( )
+{
+	SClick( 830, 510, 3000 ) ; 进采购中心
+	SClick( 1190, 140 ) ; 进信用交易所
+	SClick( 1020, 70 ) ; 收取信用
+	SClick( 1020, 70 ) ; 确认
+	SClick( 125, 400 ) ; 购买物品
+	SClick( 920, 620, 2000 ) ; 确认
+	SClick( 920, 620 ) ; 确认
+	SClick( 270, 77 ) ; 导航栏
+	SClick( 90, 210 ) ; 回主页
+}
+
+RIIC_task( )
+{
+	SClick( 1000, 650, 7000 ) ; 进基建
+	ClickPic( "notification.png" ) ; 点开通知
+	if ( ErrorLevel = 1 ){
+		ClickPic( "not1.png" )
+		if ( ErrorLevel = 1 ){
+			MsgBox, Fail to detect nots
+			return
+		}
+	}
+	SClick( 250, 730 ) ; 收取制造站
+	SClick( 420, 730 ) ; 收取信赖
+	SClick( 210, 360, 2000 ) ; 贸易站 1
+	SClick( 250, 650 ) ; 进订单
+	Loop, 15 ; 收取订单
+		SClick( 375, 410 )
+	SClick( 120, 330 ) ; 贸易站 2
+	Loop, 15 ; 收取订单
+		SClick( 375, 410 )
+	SClick( 84, 75 ) ; 回基建主页
+	SClick( 84, 75 )
+	SClick( 389, 255 )
+	SClick( 253, 358, 2000 ) ; 进制造站 1
+	SClick( 178, 648 )
+	SClick( 965, 238 ) ; 设置最大
+	SClick( 953, 632 ) ; 确定
+	SClick( 103, 331 ) ; 2
+	SClick( 965, 238 ) ; 设置最大
+	SClick( 953, 632 ) ; 确定
+	SClick( 126, 415 ) ; 3
+	SClick( 965, 238 ) ; 设置最大
+	SClick( 953, 632 ) ; 确定
+	SClick( 123, 496 ) ; 4
+	SClick( 965, 238 ) ; 设置最大
+	SClick( 953, 632 ) ; 确定
+	SClick( 270, 77 ) ; 导航栏
+	SClick( 90, 210 ) ; 回主页
+}
+
+Upgrade_task( )
+{
+	SClick( 1040, 400, 3000 ) ; 干员
+	SClick( 100, 165 ) ; 选中干员
+	SClick( 1130, 130 ) ; 点击升级
+	SClick( 570, 564 ) ; 选中记录
+	SClick( 1179, 707 ) ; 确定
+	SClick( 270, 77 ) ; 导航栏
+	SClick( 90, 210 ) ; 回主页
+}
+
+Do_1_11( )
+{
+	MouseMove, 600, 155 ;移动鼠标到499 155，并自动把屏幕移动到最右侧
+	Click, down, Left
+	MouseClick, Left , -400, 0 , 1, 1, D , R
+	Click, up, Left
+	Sleep, 1000
+
+	Click, 327, 373    ;点击1-11
+	Sleep, 500
+	Click, 1132, 691   ;点击开始行动
+	Sleep, 2500
+	Click, 1097, 533  ;点击开始行动
+	Sleep, 15000 
+	Click, 1176, 84 ;点击“跳过”
+	Sleep, 500
+	Click, 844, 540 ;点击确定
+	Sleep, 500
+
+	Click, 1103, 92 ;点击2倍速
+	Sleep 20000 ;等待剧情结束
+
+
+	Click, 1103, 92 ;点击2倍速
+	;放置翎羽
+	placePieces(269, 724, 470, 371, "right")
+	;放置芬
+	placePieces(310, 699, 371, 412, "right")
+	Sleep 2000
+	;放置巡林者
+	placePieces(154, 699, 453, 291, "right")
+	Sleep 9000
+	;放置芙蓉
+	placePieces(757, 692, 429, 444, "up")
+	Sleep 3000
+	;放置杰西卡
+	placePieces(516, 689, 623, 302, "right")
+	Sleep 4000
+	;放置安赛
+	placePieces(864, 689, 520, 438, "up")
+	Sleep 5000
+	;放置夜刃
+	placePieces(634, 689, 373, 315, "up")
+	Sleep 26000
+	;放置剑圣
+	placePieces(740, 689, 949, 430, "right")
+
+	;杰西卡退场
+	Click, 534, 255
+	Sleep 600
+	Click, 603, 250
+	Sleep 5000
+
+	;开始放置炎熔
+	placePieces(1224, 689, 538, 291, "down")
+	Sleep 25000
+	;开始放置黑角
+	placePieces(993, 689, 630, 372, "down")
+
+
+	Sleep, 23000   ;等待战斗结束
+	Click, 779, 623 ;点击屏幕，结束战斗
+	Sleep 5000
+}
+
+Do_TR_1( )
+{
+	MouseMove, 499, 155 ;移动鼠标到499 155，并自动把屏幕移动到最左侧
+	Click, down, Left
+	MouseClick, Left , 300, 0 , 1, 1, D , R
+	Click, up, Left
+	Sleep, 1000
+
+	Click, 850, 466    ;点击TR-1
+	Sleep, 500
+	Click, 1132, 691   ;点击开始行动
+	Sleep, 2500
+	Click, 1097, 533  ;点击开始行动
+	Sleep, 10000 
+	Click, 1176, 84 ;点击“跳过”
+	Sleep, 1000
+	Click, 844, 540 ;点击确定
+	Sleep, 1000
+
+	Click, 1103, 92 ;点击2倍速
+
+	;开始放置夜刀
+	placePieces(1228,691,547,275, "left")
+	;开始放置巡林者
+	placePieces(1228,691,522,411, "up")
+
+	Sleep, 15000    ;等待15秒到剧情
+	Click, 1176, 84 ;点击“跳过”
+	Sleep, 500
+
+	Click, 844, 540 ;点击确定
+	Sleep, 500
+	Click, 1103, 92 ;点击2倍速
+
+	Sleep, 22000   ;等待战斗结束
+	Click, 779, 623 ;点击屏幕，结束战斗
+	Sleep, 6000
+}
+/*
+放置人物
+*/
+placePieces(x, y, rx, ry, dir)
+{
+    MouseMove, x, y
+    Click, down, Left
+    MouseClick, Left , rx-x, ry-y , 1, 10, D , R
+    Sleep, 400
+    Click, up, Left
+    Sleep, 500
+    Click, down, Left
+    if (dir = "left")
+        MouseClick, Left , -200 , 0 , 1, 10, D , R
+    else if(dir = "up")
+        MouseClick, Left , 0 , -200 , 1, 10, D , R
+    else if(dir = "right")
+        MouseClick, Left , 200 , 0 , 1, 10, D , R
+    else
+        MouseClick, Left , 0 , 200 , 1, 10, D , R
+    Sleep, 200
+    Click, up, Left
+}
+
+MouseDrag( posX, posY, dirX, dirY )
+{
+	MouseMove, %posX%, %posY%
+	Sleep, 200
+	Click, Down
+	Sleep, 50
+	MouseMove, %dirX%, %dirY%, 20, R
+	Sleep, 50
+	Click, Up
+	Sleep, 200
+}
+
+Main_level_task( )
+{
+	SClick( 899, 234 )
+	SClick( 86, 703 )
+	Loop, 3
+		MouseDrag( 100, 400, 700, 0 )
+	SClick( 859, 407 )
+	Loop, 4
+		MouseDrag( 1100, 400, -1000, 0 )
+	/*
+	Loop, 3
+		Do_1_11( )
+	Sleep, 1000
+	*/
+	SClick( 981, 701, 1500 ) ; 切章节
+	Loop, 4
+		MouseDrag( 100, 400, 1000, 0 )
+	Loop, 2
+		Do_TR_1( )
+	SClick( 270, 77 ) ; 导航栏
+	SClick( 90, 210 ) ; 回主页	
+}
+	
+$a:: ; a 键启动
+{
+	IfWinExist, 雷电模拟器
+		WinActivate
+	Sleep, 1000
+
+	Purchase_task( )
+	Sleep, 4000
+	RIIC_task( )
+	Sleep, 4000
+	Upgrade_task( )
+	Sleep, 4000
+	Main_level_task( )
+
+}
+
+Esc::ExitApp ; Emergency Exit              
+
+/*
+主线部分已完成
+*/
+; Todo: 将关卡部分判定改为图像识别
